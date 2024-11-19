@@ -31,7 +31,5 @@ export default tseslint.config({
 
 ```js
 // eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
+import react from "eslint-plugin-react";
 ```
