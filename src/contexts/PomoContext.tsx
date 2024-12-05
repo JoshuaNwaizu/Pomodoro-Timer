@@ -1,0 +1,168 @@
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  Dispatch,
+} from "react";
+
+interface PomodoroContextType {
+  timeLeft: number;
+  isRunning: boolean;
+  currentSession: string;
+  completedSessions: number;
+  dispatch: Dispatch<Action>;
+  closeModal: boolean;
+  pomodoro: number;
+  shortBreak: number;
+  longBreak: number;
+  selectFonts: number;
+  getFonts: string;
+  selectColor: number;
+  getColor: string;
+}
+interface State {
+  timeLeft: number;
+  isRunning: boolean;
+  currentSession: string;
+  completedSessions: number;
+  closeModal: boolean;
+  pomodoro: number;
+  shortBreak: number;
+  longBreak: number;
+  selectFonts: number;
+  selectColor: number;
+  getFonts: string;
+  getColor: string;
+}
+
+interface Action {
+  type: string;
+  payload?: any;
+}
+
+const PomodoroContext = createContext<PomodoroContextType | undefined>(
+  undefined,
+);
+
+const initialState: State = {
+  timeLeft: 25 * 60,
+  isRunning: false,
+  currentSession: "work",
+  completedSessions: 0,
+  closeModal: false,
+  pomodoro: 25,
+  shortBreak: 5,
+  longBreak: 15,
+  selectFonts: 0,
+  getFonts: "",
+  selectColor: 0,
+  getColor: "",
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "START":
+      return { ...state, isRunning: true };
+    case "PAUSE":
+      return { ...state, isRunning: false };
+    case "TICK":
+      return { ...state, timeLeft: state.timeLeft - 1 };
+    case "SET_SESSION":
+      return { ...state, ...action.payload };
+
+    case "INCREMENT_COMPLETED_SESSIONS":
+      return { ...state, completedSessions: state.completedSessions + 1 };
+
+    case "TOGGLE_MODAL":
+      return { ...state, closeModal: !state.closeModal };
+    case "SET_POMODORO":
+      return {
+        ...state,
+        pomodoro: action.payload,
+        timeLeft: action.payload * 60,
+      };
+    case "SET_SHORT_BREAK":
+      return { ...state, shortBreak: action.payload };
+    case "SET_LONG_BREAK":
+      return { ...state, longBreak: action.payload };
+    case "SET_SELECT_FONTS":
+      return { ...state, selectFonts: action.payload };
+    case "GET_FONTS":
+      return {
+        ...state,
+        getFonts: action.payload,
+      };
+
+    case "SET_SELECT_COLOR":
+      return {
+        ...state,
+        selectColor: action.payload,
+      };
+
+    case "GET_COLOR":
+      return {
+        ...state,
+        getColor: action.payload,
+      };
+
+    case "RESET":
+      return initialState;
+
+    default:
+      return state;
+  }
+};
+
+// PomodoroProvider
+const PomodoroProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const {
+    timeLeft,
+    isRunning,
+    completedSessions,
+    currentSession,
+    closeModal,
+    pomodoro,
+    shortBreak,
+    longBreak,
+    selectFonts,
+    getFonts,
+    selectColor,
+    getColor,
+  } = state;
+
+  return (
+    <PomodoroContext.Provider
+      value={{
+        dispatch,
+        timeLeft,
+        isRunning,
+        completedSessions,
+        currentSession,
+        closeModal,
+        pomodoro,
+        shortBreak,
+        longBreak,
+        selectFonts,
+        getFonts,
+        selectColor,
+        getColor,
+      }}
+    >
+      {children}
+    </PomodoroContext.Provider>
+  );
+};
+
+// Custom hook for using Pomodoro context
+const usePomodoro = (): PomodoroContextType => {
+  const context = useContext(PomodoroContext);
+  if (!context) {
+    throw new Error("usePomodoro must be used within a PomodoroProvider");
+  }
+  return context;
+};
+
+export { PomodoroProvider, usePomodoro };
