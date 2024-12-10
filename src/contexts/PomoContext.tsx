@@ -55,9 +55,9 @@ const initialState: State = {
   shortBreak: 5,
   longBreak: 15,
   selectFonts: 0,
-  getFonts: "",
+  getFonts: "font-kumbh",
   selectColor: 0,
-  getColor: "",
+  getColor: "#F87070",
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -67,9 +67,15 @@ const reducer = (state: State, action: Action): State => {
     case "PAUSE":
       return { ...state, isRunning: false };
     case "TICK":
-      return { ...state, timeLeft: state.timeLeft - 1 };
+      return { ...state, timeLeft: Math.max(0, state.timeLeft - 1) };
     case "SET_SESSION":
-      return { ...state, ...action.payload };
+      return {
+        ...state,
+        currentSession: action.payload.currentSession,
+        timeLeft: action.payload.timeLeft,
+        completedSessions:
+          action.payload.completedSessions ?? state.completedSessions,
+      };
 
     case "INCREMENT_COMPLETED_SESSIONS":
       return { ...state, completedSessions: state.completedSessions + 1 };
@@ -80,12 +86,29 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         pomodoro: action.payload,
-        timeLeft: action.payload * 60,
+        timeLeft:
+          state.currentSession === "work " ? action.payload : state.timeLeft,
       };
     case "SET_SHORT_BREAK":
-      return { ...state, shortBreak: action.payload };
+      return {
+        ...state,
+        shortBreak: action.payload,
+
+        timeLeft:
+          state.currentSession === "shortbreak"
+            ? action.payload
+            : state.shortBreak,
+      };
     case "SET_LONG_BREAK":
-      return { ...state, longBreak: action.payload };
+      return {
+        ...state,
+        longBreak: action.payload,
+
+        timeLeft:
+          state.currentSession === "longbreak"
+            ? action.payload
+            : state.longBreak,
+      };
     case "SET_SELECT_FONTS":
       return { ...state, selectFonts: action.payload };
     case "GET_FONTS":

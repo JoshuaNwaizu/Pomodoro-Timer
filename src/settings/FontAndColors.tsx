@@ -1,9 +1,17 @@
-// import React from 'react'
-
 import { usePomodoro } from "../contexts/PomoContext";
-// import { FaCheck } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa6";
 
-const fonts = [
+interface Fonts {
+  name: string;
+  font: string;
+}
+interface Colors {
+  name: string;
+  color: string;
+  bg: string;
+}
+
+const fonts: Fonts[] = [
   {
     name: "Aa",
     font: "font-kumbh",
@@ -18,18 +26,21 @@ const fonts = [
   },
 ];
 
-const colors = [
+const colors: Colors[] = [
   {
     name: "red",
-    color: "bg-[#F87070]",
+    color: "#F87070",
+    bg: "bg-[#F87070]",
   },
   {
     name: "blue",
-    color: "bg-[#70F3F8]",
+    color: "#70F3F8",
+    bg: "bg-[#70F3F8]",
   },
   {
     name: "purple",
-    color: "bg-[#D881F8]",
+    color: "#D881F8",
+    bg: "bg-[#D881F8]",
   },
 ];
 
@@ -39,18 +50,16 @@ const FontAndColors = () => {
   const handleGetFonts = (num: number, fonts: string): void => {
     dispatch({ type: "GET_FONTS", payload: fonts });
     dispatch({ type: "SET_SELECT_FONTS", payload: num });
-
-    console.log(`Font ${num}:  ${fonts}`);
   };
 
-  const handleGetColor = (num: number, color: string) => {
+  const handleGetColor = (num: number, color?: string) => {
     dispatch({ type: "SET_SELECT_COLOR", payload: num });
     dispatch({ type: "GET_COLOR", payload: color });
   };
   return (
-    <section className="flex flex-col gap-5 px-5">
+    <section className="flex flex-col gap-5 px-5 lg:px-[2rem]">
       {" "}
-      <div className="mt-5 flex flex-col items-center justify-center gap-4 border-t border-t-[#E3E1E1] pt-5">
+      <div className="mt-5 flex flex-col items-center justify-center gap-4 border-t border-t-[#E3E1E1] pt-5 lg:flex-row lg:justify-between">
         <h1 className="text-[.6875rem] font-bold uppercase tracking-[0.26444rem] text-[#161932]">
           font
         </h1>
@@ -65,7 +74,7 @@ const FontAndColors = () => {
           ))}
         </div>
       </div>
-      <div className="mt-3 flex flex-col items-center justify-center gap-4 border-t border-t-[#E3E1E1] pt-5">
+      <div className="mt-3 flex flex-col items-center justify-center gap-4 border-t border-t-[#E3E1E1] pt-5 lg:flex-row lg:justify-between">
         <h1 className="text-[.6875rem] font-bold uppercase tracking-[0.26444rem] text-[#161932]">
           color
         </h1>
@@ -73,9 +82,9 @@ const FontAndColors = () => {
           {colors.map((color, i) => (
             <div
               onClick={() => handleGetColor(i, color.color)}
-              className={`${color.color} h-[2.5rem] w-[2.5rem] rounded-full`}
+              className={`${color.bg} flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full text-[#1E213F]`}
             >
-              {/* <FaCheck /> */}
+              {selectColor === i ? <FaCheck /> : ""}
             </div>
           ))}
         </div>

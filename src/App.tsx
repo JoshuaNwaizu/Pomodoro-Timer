@@ -6,10 +6,12 @@ import TimerComponent from "./timer/TimerComponent";
 
 const App = () => {
   return (
-    <div className="relative h-svh overflow-y-hidden">
+    <div className="relative flex flex-col items-center gap-10 overflow-y-hidden h-svh">
       <Header />
+
       <TimerComponent />
-      <div className="absolute bottom-[4rem] w-full">
+
+      <div className="absolute bottom-[3rem] w-full">
         <Settings />
       </div>
       <SettingModal />

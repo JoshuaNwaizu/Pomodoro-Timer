@@ -6,9 +6,6 @@ interface CircularProgressBarProps {
   strokeWidth?: number;
 }
 
-const workTime = 12 * 60;
-const shortBreakTime = 5 * 60;
-const longBreakTime = 15 * 60;
 const TimerComponent: React.FC<CircularProgressBarProps> = ({
   size = 270,
   strokeWidth = 7,
@@ -23,12 +20,13 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
     getFonts,
     shortBreak,
     longBreak,
+    getColor,
   } = usePomodoro();
 
   const totalTime =
     currentSession === "work"
       ? pomodoro * 60
-      : currentSession === "short break"
+      : currentSession === "shortbreak"
         ? shortBreak * 60
         : longBreak * 60;
 
@@ -50,19 +48,37 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
         type: "SET_SESSION",
         payload:
           completedSessions < 2
-            ? { currentSession: "shortBreak", timeLeft: shortBreak }
-            : { currentSession: "longBreak", timeLeft: longBreak },
+            ? { currentSession: "shortbreak", timeLeft: shortBreak * 60 }
+            : { currentSession: "longbreak", timeLeft: longBreak * 60 },
       });
     } else {
       dispatch({
         type: "SET_SESSION",
         payload: {
           currentSession: "work",
-          timeLeft: workTime,
+          timeLeft: pomodoro,
           completedSessions: completedSessions + 1,
         },
       });
     }
+    //   if (currentSession === "work") {
+    //   dispatch({
+    //     type: "SET_SESSION",
+    //     payload: {
+    //       currentSession: completedSessions < 2 ? "shortbreak" : "longbreak",
+    //       timeLeft: completedSessions < 2 ? shortBreak * 60 : longBreak * 60,
+    //     },
+    //   });
+    // } else {
+    //   dispatch({
+    //     type: "SET_SESSION",
+    //     payload: {
+    //       currentSession: "work",
+    //       timeLeft: pomodoro * 60,
+    //       completedSessions: currentSession === "longbreak" ? 0 : completedSessions + 1,
+    //     },
+    //   });
+    // }
   };
 
   const formatTime = (seconds: number) => {
@@ -88,57 +104,54 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
 
   return (
     <div
-      className={`flex h-[25.625rem] ${getFonts} items-center justify-center bg-[#1e213f]`}
+      className={`timer-background ${getFonts} relative flex h-[19.75rem] w-[19.75rem] items-center justify-center rounded-full bg-red-300`}
     >
-      <div className="timer-background relative flex h-[19.75rem] w-[19.75rem] items-center justify-center rounded-full bg-red-300">
-        <svg width={size} height={size} className="rounded-full">
-          {/* Background Circle */}
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            stroke="#e6e6e6"
-            strokeWidth={strokeWidth}
-            fill="none"
-          />
-          {/* Progress Circle */}
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            stroke="#F87070"
-            strokeWidth={strokeWidth}
-            fill="none"
-            strokeDasharray={circumference}
-            // strokeDashoffset={offset}
-            strokeDashoffset={timeLeft === 0 ? circumference : offset}
-            strokeLinecap="round"
-            transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            style={{ transition: "stroke-dashoffset 0.5s ease" }}
-          />
-        </svg>
+      <svg width={size} height={size} className="rounded-full">
+        {/* Background Circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="#e6e6e634"
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        {/* Progress Circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={getColor}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={timeLeft === 0 ? circumference : offset}
+          strokeLinecap="round"
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          style={{ transition: "stroke-dashoffset 0.5s ease" }}
+        />
+      </svg>
 
-        <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center">
-          <div className="px-2 text-[5.2rem] font-bold tracking-[-0.3125rem]">
-            {formatTime(timeLeft)}
-          </div>
-          <div className="ml-4 flex items-center justify-center text-center">
-            {isRunning ? (
-              <button
-                onClick={handlePauseTimer}
-                className="text-center font-bold uppercase tracking-[0.7375rem]"
-              >
-                Pause
-              </button>
-            ) : (
-              <button
-                onClick={handleStartTimer}
-                className="font-bold uppercase tracking-[0.7375rem]"
-              >
-                start
-              </button>
-            )}
-          </div>
+      <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center">
+        <div className="px-2 text-[5.2rem] font-bold tracking-[-0.3125rem]">
+          {formatTime(timeLeft)}
+        </div>
+        <div className="ml-4 flex items-center justify-center text-center">
+          {isRunning ? (
+            <button
+              onClick={handlePauseTimer}
+              className="text-center font-bold uppercase tracking-[0.7375rem]"
+            >
+              Pause
+            </button>
+          ) : (
+            <button
+              onClick={handleStartTimer}
+              className="font-bold uppercase tracking-[0.7375rem]"
+            >
+              start
+            </button>
+          )}
         </div>
       </div>
     </div>

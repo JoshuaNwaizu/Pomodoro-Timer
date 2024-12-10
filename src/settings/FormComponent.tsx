@@ -7,8 +7,10 @@ interface FormProps {
 }
 const FormComponent: React.FC<FormProps> = ({ name, value, onChange }) => {
   return (
-    <div className="flex items-center justify-between">
-      <span className="text-xs font-bold text-[#1E213F]">{name}</span>
+    <div className="flex items-center justify-between gap-1 lg:flex-col lg:items-start">
+      <span className="overflow-y-hidden text-xs font-bold text-[#1E213F]">
+        {name}
+      </span>
       <input
         type="number"
         min="1"

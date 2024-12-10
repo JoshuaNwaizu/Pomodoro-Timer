@@ -1,24 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePomodoro } from "../contexts/PomoContext";
 
-const options: string[] = ["pomodoro", "short break", "long break"];
-
 const ActivityOption = () => {
-  const { currentSession } = usePomodoro();
+  const {
+    currentSession,
+    getFonts,
+    getColor,
+    pomodoro,
+    shortBreak,
+    longBreak,
+    isRunning,
+    dispatch,
+  } = usePomodoro();
   const [selectedOption, setSelectedOption] = useState<number>(0);
+  const bg = `bg-[${getColor}]`;
+
+  const options: { label: string; session: string; time: number }[] = [
+    { label: "pomodoro", session: "work", time: pomodoro * 60 },
+    { label: "short break", session: "shortbreak", time: shortBreak * 60 },
+    { label: "long break", session: "longbreak", time: longBreak * 60 },
+  ];
+  console.log(bg);
   const handleOptionClick = (index: number) => {
+    if (isRunning) {
+      alert("pause the current session before switching");
+      return;
+    }
     setSelectedOption(index);
+
+    const selected = options[index];
+    dispatch({
+      type: "SET_SESSION",
+      payload: { currentSession: selected.session, timeLeft: selected.time },
+    });
   };
+
+  useEffect(() => {
+    const sessionIndex = options.findIndex(
+      (option) => option.session === currentSession.toLowerCase(),
+    );
+    if (sessionIndex !== -1) {
+      setSelectedOption(sessionIndex);
+    }
+  }, [currentSession]);
 
   return (
     <div>
       <div className="flex h-[3.9375rem] w-[20.4375rem] items-center justify-between rounded-full bg-[#161932] px-1">
         {options.map((option, i) => (
           <p
-            className={`flex h-[3rem] ${selectedOption === i && "bg-[#F87070] text-[#1E213F]"} ${currentSession === "shortBreak" || "longBreak"} w-[6.57506rem] items-center justify-center rounded-3xl text-xs font-bold text-[#D7E0FF]`}
+            className={`flex h-[3rem] ${selectedOption === i && `${bg} text-[#1b1e38]`} ${currentSession === "shortBreak" || "longBreak"} w-[6.57506rem] ${getFonts} items-center justify-center rounded-3xl text-xs font-bold text-[#D7E0FF]`}
             onClick={() => handleOptionClick(i)}
           >
-            <span>{option}</span>
+            <span className="px-1 overflow-hidden">{option.label}</span>
           </p>
         ))}
       </div>
