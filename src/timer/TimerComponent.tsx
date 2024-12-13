@@ -22,7 +22,6 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
     longBreak,
     getColor,
   } = usePomodoro();
-
   const totalTime =
     currentSession === "work"
       ? pomodoro * 60
@@ -46,39 +45,27 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
     if (currentSession === "work") {
       dispatch({
         type: "SET_SESSION",
-        payload:
-          completedSessions < 2
-            ? { currentSession: "shortbreak", timeLeft: shortBreak * 60 }
-            : { currentSession: "longbreak", timeLeft: longBreak * 60 },
+        payload: { currentSession: "shortbreak", timeLeft: shortBreak * 60 },
       });
-    } else {
+    } else if (currentSession === "shortbreak") {
+      if (completedSessions < 2) {
+        dispatch({
+          type: "SET_SESSION",
+          payload: { currentSession: "work", timeLeft: pomodoro * 60 },
+        });
+      } else {
+        dispatch({
+          type: "SET_SESSION",
+          payload: { currentSession: "longbreak", timeLeft: longBreak * 60 },
+        });
+        dispatch({ type: "RESET_CYCLES" });
+      }
+    } else if (currentSession === "longbreak") {
       dispatch({
         type: "SET_SESSION",
-        payload: {
-          currentSession: "work",
-          timeLeft: pomodoro,
-          completedSessions: completedSessions + 1,
-        },
+        payload: { currentSession: "work", timeLeft: pomodoro * 60 },
       });
     }
-    //   if (currentSession === "work") {
-    //   dispatch({
-    //     type: "SET_SESSION",
-    //     payload: {
-    //       currentSession: completedSessions < 2 ? "shortbreak" : "longbreak",
-    //       timeLeft: completedSessions < 2 ? shortBreak * 60 : longBreak * 60,
-    //     },
-    //   });
-    // } else {
-    //   dispatch({
-    //     type: "SET_SESSION",
-    //     payload: {
-    //       currentSession: "work",
-    //       timeLeft: pomodoro * 60,
-    //       completedSessions: currentSession === "longbreak" ? 0 : completedSessions + 1,
-    //     },
-    //   });
-    // }
   };
 
   const formatTime = (seconds: number) => {
@@ -132,11 +119,11 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
         />
       </svg>
 
-      <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center">
+      <div className="absolute top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center">
         <div className="px-2 text-[5.2rem] font-bold tracking-[-0.3125rem]">
           {formatTime(timeLeft)}
         </div>
-        <div className="ml-4 flex items-center justify-center text-center">
+        <div className="flex items-center justify-center ml-4 text-center">
           {isRunning ? (
             <button
               onClick={handlePauseTimer}

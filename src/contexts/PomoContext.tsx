@@ -67,15 +67,26 @@ const reducer = (state: State, action: Action): State => {
     case "PAUSE":
       return { ...state, isRunning: false };
     case "TICK":
+      if (state.timeLeft === 0) {
+        return state; // Prevent redundant updates when timer hits zero
+      }
       return { ...state, timeLeft: Math.max(0, state.timeLeft - 1) };
+
     case "SET_SESSION":
-      return {
-        ...state,
-        currentSession: action.payload.currentSession,
-        timeLeft: action.payload.timeLeft,
-        completedSessions:
-          action.payload.completedSessions ?? state.completedSessions,
-      };
+      if (action.payload.currentSession === "work") {
+        return {
+          ...state,
+          currentSession: "work",
+          timeLeft: action.payload.timeLeft,
+          completedSessions: state.completedSessions + 1,
+        };
+      } else {
+        return {
+          ...state,
+          currentSession: action.payload.currentSession,
+          timeLeft: action.payload.timeLeft,
+        };
+      }
 
     case "INCREMENT_COMPLETED_SESSIONS":
       return { ...state, completedSessions: state.completedSessions + 1 };
@@ -87,27 +98,27 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         pomodoro: action.payload,
         timeLeft:
-          state.currentSession === "work " ? action.payload : state.timeLeft,
+          state.currentSession === "work"
+            ? action.payload * 60
+            : state.timeLeft,
       };
     case "SET_SHORT_BREAK":
       return {
         ...state,
         shortBreak: action.payload,
-
         timeLeft:
           state.currentSession === "shortbreak"
-            ? action.payload
-            : state.shortBreak,
+            ? action.payload * 60
+            : state.timeLeft,
       };
     case "SET_LONG_BREAK":
       return {
         ...state,
         longBreak: action.payload,
-
         timeLeft:
           state.currentSession === "longbreak"
-            ? action.payload
-            : state.longBreak,
+            ? action.payload * 60
+            : state.timeLeft,
       };
     case "SET_SELECT_FONTS":
       return { ...state, selectFonts: action.payload };
@@ -127,6 +138,12 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         getColor: action.payload,
+      };
+
+    case "RESET_CYCLES":
+      return {
+        ...state,
+        completedSessions: 0,
       };
 
     case "RESET":

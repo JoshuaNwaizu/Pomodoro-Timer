@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePomodoro } from "../contexts/PomoContext";
 import FormComponent from "./FormComponent";
 import FontAndColors from "./FontAndColors";
@@ -12,7 +12,6 @@ const SettingModal = () => {
     longBreak,
     getColor,
     getFonts,
-    currentSession,
   } = usePomodoro();
   const [newPomodoro, setNewPomodoro] = useState<number | string>(pomodoro);
   const [newShortBreak, setNewShortBreak] = useState<number | string>(
@@ -22,33 +21,18 @@ const SettingModal = () => {
 
   const bg = `bg-[${getColor}]`;
 
-  console.log(newPomodoro, newShortBreak, newLongBreak);
   const handleApplyChanges = () => {
     if (newPomodoro !== pomodoro) {
-      dispatch({ type: "SET_POMODORO", payload: +newPomodoro });
+      dispatch({ type: "SET_POMODORO", payload: newPomodoro });
     }
     if (newShortBreak !== shortBreak) {
-      dispatch({ type: "SET_SHORT_BREAK", payload: +newShortBreak });
+      dispatch({ type: "SET_SHORT_BREAK", payload: newShortBreak });
     }
     if (newLongBreak !== longBreak) {
-      dispatch({ type: "SET_LONG_BREAK", payload: +newLongBreak });
+      dispatch({ type: "SET_LONG_BREAK", payload: newLongBreak });
     }
     dispatch({ type: "TOGGLE_MODAL" });
-    // dispatch({ type: "SET_POMODORO", payload: +newPomodoro });
-    // dispatch({ type: "SET_SHORT_BREAK", payload: +newShortBreak });
-    // dispatch({ type: "SET_LONG_BREAK", payload: +newLongBreak });
-    // dispatch({ type: "TOGGLE_MODAL" });
   };
-  useEffect(() => {
-    if (currentSession === "work") {
-      setNewPomodoro(pomodoro);
-    } else if (currentSession === "shortbreak") {
-      setNewShortBreak(shortBreak);
-    } else if (currentSession === "longbreak") {
-      setNewLongBreak(longBreak);
-    }
-  }, [closeModal, pomodoro, shortBreak, longBreak, currentSession]);
-
   return (
     <div
       className={`inset-0 ${!closeModal ? "hidden" : "flex"} ${getFonts} fixed bottom-0 left-0 right-0 top-0 z-50 items-center justify-center bg-[#0000007b] lg:justify-center`}
