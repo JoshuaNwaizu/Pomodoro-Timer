@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { usePomodoro } from "../contexts/PomoContext";
 import { FaCheck } from "react-icons/fa6";
 
@@ -47,15 +48,37 @@ const colors: Colors[] = [
 const FontAndColors = () => {
   const { dispatch, selectFonts, selectColor } = usePomodoro();
 
+  const saveToLocalStorage = (key: string, value: any): void => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
   const handleGetFonts = (num: number, fonts: string): void => {
     dispatch({ type: "GET_FONTS", payload: fonts });
     dispatch({ type: "SET_SELECT_FONTS", payload: num });
+    saveToLocalStorage("selectFonts", { num, fonts });
   };
 
   const handleGetColor = (num: number, color?: string) => {
     dispatch({ type: "SET_SELECT_COLOR", payload: num });
     dispatch({ type: "GET_COLOR", payload: color });
+    saveToLocalStorage("selectColor", { num, color });
   };
+
+  useEffect(() => {
+    const storedFonts = localStorage.getItem("selectFonts");
+    const storedColor = localStorage.getItem("selectColor");
+
+    if (storedFonts) {
+      const { num, fonts } = JSON.parse(storedFonts);
+      dispatch({ type: "GET_FONTS", payload: fonts });
+      dispatch({ type: "SET_SELECT_FONTS", payload: num });
+    }
+
+    if (storedColor) {
+      const { num, color } = JSON.parse(storedColor);
+      dispatch({ type: "SET_SELECT_COLOR", payload: num });
+      dispatch({ type: "GET_COLOR", payload: color });
+    }
+  }, [dispatch]);
   return (
     <section className="flex flex-col gap-5 px-5 lg:px-[2rem]">
       {" "}

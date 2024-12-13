@@ -91,7 +91,8 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
 
   return (
     <div
-      className={`timer-background ${getFonts} relative flex h-[19.75rem] w-[19.75rem] items-center justify-center rounded-full bg-red-300`}
+      className={`timer-background ${getFonts} relative flex h-[19.75rem] w-[19.75rem] cursor-pointer items-center justify-center rounded-full`}
+      onClick={isRunning ? handlePauseTimer : handleStartTimer}
     >
       <svg width={size} height={size} className="rounded-full">
         {/* Background Circle */}
@@ -119,23 +120,17 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
         />
       </svg>
 
-      <div className="absolute top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center">
+      <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center">
         <div className="px-2 text-[5.2rem] font-bold tracking-[-0.3125rem]">
           {formatTime(timeLeft)}
         </div>
-        <div className="flex items-center justify-center ml-4 text-center">
+        <div className="ml-4 flex items-center justify-center text-center">
           {isRunning ? (
-            <button
-              onClick={handlePauseTimer}
-              className="text-center font-bold uppercase tracking-[0.7375rem]"
-            >
+            <button className="text-center font-bold uppercase tracking-[0.7375rem]">
               Pause
             </button>
           ) : (
-            <button
-              onClick={handleStartTimer}
-              className="font-bold uppercase tracking-[0.7375rem]"
-            >
+            <button className="font-bold uppercase tracking-[0.7375rem]">
               start
             </button>
           )}
