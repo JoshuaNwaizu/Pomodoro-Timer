@@ -66,8 +66,9 @@ const FontAndColors = () => {
         <div className="flex gap-3">
           {fonts.map((font, i) => (
             <span
+              key={font.font}
               onClick={() => handleGetFonts(i, font.font)}
-              className={` ${font.font} ${selectFonts === i ? "bg-[#161932] font-bold text-white" : "bg-[#EFF1FA] text-[#1E213F]"} flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full text-[.94rem]`}
+              className={` ${font.font} ${selectFonts === i ? "cursor-pointer bg-[#161932] font-bold text-white" : "bg-[#EFF1FA] text-[#1E213F]"} flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full text-[.94rem]`}
             >
               {font.name}
             </span>
@@ -81,8 +82,9 @@ const FontAndColors = () => {
         <div className="flex gap-3">
           {colors.map((color, i) => (
             <div
+              key={color.bg}
               onClick={() => handleGetColor(i, color.color)}
-              className={`${color.bg} flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full text-[#1E213F]`}
+              className={`${color.bg} flex h-[2.5rem] w-[2.5rem] cursor-pointer items-center justify-center rounded-full text-[#1E213F]`}
             >
               {selectColor === i ? <FaCheck /> : ""}
             </div>

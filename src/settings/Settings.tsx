@@ -5,7 +5,7 @@ const Settings = () => {
 
   return (
     <div
-      className="flex w-full items-center justify-center"
+      className="flex items-center justify-center w-full cursor-pointer"
       onClick={() => dispatch({ type: "TOGGLE_MODAL" })}
     >
       <img src="/assets/icon-settings.svg" alt="settings" />

@@ -20,7 +20,7 @@ const ActivityOption = () => {
     { label: "short break", session: "shortbreak", time: shortBreak * 60 },
     { label: "long break", session: "longbreak", time: longBreak * 60 },
   ];
-
+  console.log(bg);
   const handleOptionClick = (index: number) => {
     if (isRunning) {
       alert("pause the current session before switching");
@@ -49,7 +49,7 @@ const ActivityOption = () => {
       <div className="flex h-[3.9375rem] w-[20.4375rem] items-center justify-between rounded-full bg-[#161932] px-1">
         {options.map((option, i) => (
           <p
-            className={`flex h-[3rem] ${selectedOption === i && `text-black ${bg}`} ${currentSession === "shortBreak" || "longBreak"} w-[6.57506rem] ${getFonts} items-center justify-center rounded-3xl text-xs font-bold text-[#D7E0FF]`}
+            className={`flex h-[3rem] ${selectedOption === i ? ` ${bg} text-[#1E213F]` : "cursor-pointer text-[#D7E0FF]"} ${currentSession === "shortBreak" || "longBreak"} w-[6.57506rem] ${getFonts} items-center justify-center rounded-3xl text-xs font-bold`}
             onClick={() => handleOptionClick(i)}
           >
             <span className="px-1 overflow-hidden">{option.label}</span>
