@@ -49,7 +49,7 @@ const ActivityOption = () => {
       <div className="flex h-[3.9375rem] w-[20.4375rem] items-center justify-between rounded-full bg-[#161932] px-1">
         {options.map((option, i) => (
           <p
-            className={`flex h-[3rem] ${selectedOption === i && `text-[#1b1e39] ${bg}`} ${currentSession === "shortBreak" || "longBreak"} w-[6.57506rem] ${getFonts} items-center justify-center rounded-3xl text-xs font-bold text-[#D7E0FF]`}
+            className={`flex h-[3rem] ${selectedOption === i && `text-[#0b0c20] ${bg}`} ${currentSession === "shortBreak" || "longBreak"} w-[6.57506rem] ${getFonts} items-center justify-center rounded-3xl text-xs font-bold text-[#D7E0FF]`}
             onClick={() => handleOptionClick(i)}
           >
             <span className="px-1 overflow-hidden">{option.label}</span>
