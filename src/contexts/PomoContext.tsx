@@ -154,7 +154,6 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-// PomodoroProvider
 const PomodoroProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 

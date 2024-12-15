@@ -121,7 +121,9 @@ const TimerComponent: React.FC<CircularProgressBarProps> = ({
       </svg>
 
       <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center">
-        <div className="px-2 text-[5.2rem] font-bold tracking-[-0.3125rem]">
+        <div
+          className={`${!isRunning && "animate-pulse"} px-2 text-[5.2rem] font-bold tracking-[-0.3125rem]`}
+        >
           {formatTime(timeLeft)}
         </div>
         <div className="ml-4 flex items-center justify-center text-center">
