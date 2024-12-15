@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { usePomodoro } from "../contexts/PomoContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ActivityOption = () => {
   const {
@@ -23,7 +25,10 @@ const ActivityOption = () => {
 
   const handleOptionClick = (index: number) => {
     if (isRunning) {
-      alert("pause the current session before switching");
+      toast.error("Pause the current session before switching!", {
+        position: "top-right",
+      });
+
       return;
     }
     setSelectedOption(index);
@@ -52,10 +57,11 @@ const ActivityOption = () => {
             className={`flex h-[3rem] ${selectedOption === i ? ` ${bg} text-[#1E213F]` : "cursor-pointer text-[#D7E0FF]"} ${currentSession === "shortBreak" || "longBreak"} w-[6.57506rem] ${getFonts} items-center justify-center rounded-3xl text-xs font-bold`}
             onClick={() => handleOptionClick(i)}
           >
-            <span className="overflow-hidden px-1">{option.label}</span>
+            <span className="px-1 overflow-hidden">{option.label}</span>
           </p>
         ))}
       </div>
+      <ToastContainer />
     </div>
   );
 };
